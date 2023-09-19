@@ -15,6 +15,7 @@ import { ColDatatype, IDatatype } from '../api/Datatypes/Datatypes';
 import Offcanvas from 'react-bootstrap/esm/Offcanvas';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco, dark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { DatatypeConverters } from '../api/Datatypes/converters';
 
 
 export const App = () => {
@@ -34,6 +35,15 @@ export const App = () => {
 
   // editing datatype or not
   const [editingDT, setEditingDT] = useState(false)
+
+  // text strings with generated files
+  const [tsInterfaceFile, setTSInterfaceFile] = useState("")
+
+  const generateFiles = (d: IDatatype) => {
+    
+    setTSInterfaceFile(DatatypeConverters.tsInterface(d))
+    
+  }
 
 
   return <>
@@ -84,7 +94,7 @@ export const App = () => {
         <h5>Datatypes</h5>
         {editingDT ? <DatatypesForm /> : 
         <SyntaxHighlighter language="typescript" style={dark}>
-      {"interface IPerson { name: string }"}
+      {tsInterfaceFile}
     </SyntaxHighlighter>}
         
         </Col>
@@ -99,7 +109,10 @@ export const App = () => {
         <Offcanvas.Body>
           <h5>Datatypes</h5>
           {dts.map((d,i) => <>
-          <a href="#" onClick={()=>setCurrentDT(d._id)}>{d.name}</a>
+          <a href="#" onClick={()=> {
+            setCurrentDT(d)
+            generateFiles(d)
+            }}>{d.name}</a>
           </>)}
         </Offcanvas.Body>
       </Offcanvas>

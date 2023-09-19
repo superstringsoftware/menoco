@@ -33,7 +33,7 @@ export interface IDatatype {
     name: string,
     description: string,
     fields: IDatatypefield[],
-    ownerId?: string,
+    ownerId?: string | null,
     applicationName?: string,
     isPublic: boolean,
     isPersistent: boolean
@@ -73,4 +73,4 @@ export const SDatatype = new SimpleSchema({
     }
 });
 
-export const ColDatatype = new Mongo.Collection("datatypes");
+export const ColDatatype = new Mongo.Collection<IDatatype>("datatypes");
