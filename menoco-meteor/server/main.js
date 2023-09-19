@@ -3,6 +3,7 @@ import { ServiceConfiguration } from 'meteor/service-configuration';
 
 import "/imports/api/Datatypes/Datatypes"
 import "/imports/api/Datatypes/methods"
+import "/imports/api/Datatypes/publications"
 
 Meteor.startup(async () => {
   // If the Links collection is empty, add some data.

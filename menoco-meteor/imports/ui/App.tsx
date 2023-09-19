@@ -10,10 +10,19 @@ import Row from 'react-bootstrap/esm/Row';
 import { DatatypesForm } from './DatatypesForm';
 import { LoginWithGithub } from './Login/LoginWithGithub';
 import {Meteor} from 'meteor/meteor'
+import {useFind, useSubscribe} from 'meteor/react-meteor-data'
+import { ColDatatype } from '../api/Datatypes/Datatypes';
 
 
-export const App = () => (
-  <>
+export const App = () => {
+
+  const dtReady = useSubscribe("datatypes.allMine")
+  const dts = useFind(() => ColDatatype.find({}))
+
+  console.log(dts)
+
+
+  return <>
    <Navbar expand="lg" className="bg-dark" data-bs-theme="dark">
       <Container fluid>
         <Navbar.Brand href="#">menoco</Navbar.Brand>
@@ -64,4 +73,4 @@ export const App = () => (
       </Row>
     </Container>
   </>
-);
+}
