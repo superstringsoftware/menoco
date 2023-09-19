@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 
-import "/imports/api/Datatypes"
+import "/imports/api/Datatypes/Datatypes"
+import "/imports/api/Datatypes/methods"
 
 Meteor.startup(async () => {
   // If the Links collection is empty, add some data.
