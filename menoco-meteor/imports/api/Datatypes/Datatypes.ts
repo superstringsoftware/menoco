@@ -30,6 +30,7 @@ export const SDatatypefield = new SimpleSchema({
   });
 
 export interface IDatatype {
+    _id?: string,
     name: string,
     description: string,
     fields: IDatatypefield[],

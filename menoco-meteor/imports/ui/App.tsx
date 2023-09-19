@@ -94,10 +94,10 @@ export const App = () => {
 
     <Container fluid>
 
-      <Row>
+      <Row className='mt-4'>
         <Col xl={12} xxl={6}>
-          <h5>Datatypes</h5>
-          {editingDT ? <DatatypesForm /> :
+          <h5>Datatype{currentDT && <>: {currentDT.name} {" "}<a href="#" onClick={()=>setEditingDT(true)}><i className="fa-light fa-pencil"></i></a></>}</h5>
+          {editingDT ? <DatatypesForm dt={currentDT} onCancel={()=>setEditingDT(false)} /> :
             <SyntaxHighlighter language="typescript" style={dark}>
               {tsInterfaceFile}
             </SyntaxHighlighter>}
@@ -113,11 +113,18 @@ export const App = () => {
       </Offcanvas.Header>
       <Offcanvas.Body>
         <h5>Datatypes</h5>
+        <a href="#" onClick={()=> {
+          setCurrentDT(null)
+          setEditingDT(true)
+        }}>
+          Create New
+        </a><br/>
         {dts.map((d, i) => <>
           <a href="#" onClick={() => {
             setCurrentDT(d)
             generateFiles(d)
-          }}>{d.name}</a>
+            setEditingDT(false)
+          }}>{d.name}</a><br/>
         </>)}
       </Offcanvas.Body>
     </Offcanvas>

@@ -6,11 +6,17 @@ import { IDatatype, IDatatypefield } from '../api/Datatypes/Datatypes'
 import { Button } from 'react-bootstrap'
 import { DatatypesController } from '../api/Datatypes/methods'
 
-export const DatatypesForm = () => {
+export const DatatypesForm = (props: {
+    dt: IDatatype | null,
+    onCancel: () => void
+}) => {
 
-    const [fields, setFields] = useState<IDatatypefield[]>([])
-    const [name, setName] = useState<string>("")
-    const [desc, setDesc] = useState<string>("")
+    const odt = props.dt
+    const onCancel = props.onCancel
+
+    const [fields, setFields] = useState<IDatatypefield[]>(odt ? odt.fields : [])
+    const [name, setName] = useState<string>(odt ? odt.name : "")
+    const [desc, setDesc] = useState<string>(odt ? odt.description : "")
 
     const save = () => {
         console.log("export interface I"+name + " {")
@@ -33,9 +39,21 @@ export const DatatypesForm = () => {
         }
 
         // saving to the collection
+        if (odt) {
+            //updating
+            DatatypesController.update.call({id: odt._id, fields: dt}, (err: any,res: any) => {
+                console.log(err,res)
+            })
+        }
+        else {
+            // creating new
         DatatypesController.insert.call(dt, (err: any,res: any) => {
             console.log(err,res)
+            if (!err) {
+                onCancel()
+            }
         })
+        }
     }
 
     const deleteK = (k: number) => {
@@ -164,7 +182,8 @@ export const DatatypesForm = () => {
                 })
                 setFields(newf)
             }}>New Field</Button>{" "}
-            <Button variant="outline-success" onClick={save}>Save</Button>
+            <Button variant="outline-success" onClick={save}>Save</Button>{" "}
+            <Button variant="outline-warning" onClick={onCancel}>Cancel</Button>
 
         </Form>
     )
