@@ -11,6 +11,9 @@ declare module "meteor/meteor" {
                 isPlanCurrent?: boolean,
                 stripe?: object // here we store different bs stripe sends us
             }
+            profile?: {
+                name?: string
+            }
 
         }
     }

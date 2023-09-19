@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/esm/Button';
 import Col from 'react-bootstrap/esm/Col';
 import Container from 'react-bootstrap/esm/Container';
@@ -11,7 +11,10 @@ import { DatatypesForm } from './DatatypesForm';
 import { LoginWithGithub } from './Login/LoginWithGithub';
 import {Meteor} from 'meteor/meteor'
 import {useFind, useSubscribe} from 'meteor/react-meteor-data'
-import { ColDatatype } from '../api/Datatypes/Datatypes';
+import { ColDatatype, IDatatype } from '../api/Datatypes/Datatypes';
+import Offcanvas from 'react-bootstrap/esm/Offcanvas';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { docco, dark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 
 export const App = () => {
@@ -20,6 +23,17 @@ export const App = () => {
   const dts = useFind(() => ColDatatype.find({}))
 
   console.log(dts)
+
+  const [showLM, setShowLM] = useState(true)
+  const handleCloseLeftMenu = () => setShowLM(false)
+  const showLeftMenu = () => setShowLM(true)
+
+  // currently selected datatype
+  const [currentDT, setCurrentDT] = useState<IDatatype | null>(null)
+  console.log(currentDT)
+
+  // editing datatype or not
+  const [editingDT, setEditingDT] = useState(false)
 
 
   return <>
@@ -68,9 +82,26 @@ export const App = () => {
       <Row>
         <Col xl={12} xxl={6}>
         <h5>Datatypes</h5>
-        <DatatypesForm />
+        {editingDT ? <DatatypesForm /> : 
+        <SyntaxHighlighter language="typescript" style={dark}>
+      {"interface IPerson { name: string }"}
+    </SyntaxHighlighter>}
+        
         </Col>
       </Row>
     </Container>
+
+
+    <Offcanvas show={showLM} onHide={handleCloseLeftMenu}>
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>My Apps</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <h5>Datatypes</h5>
+          {dts.map((d,i) => <>
+          <a href="#" onClick={()=>setCurrentDT(d._id)}>{d.name}</a>
+          </>)}
+        </Offcanvas.Body>
+      </Offcanvas>
   </>
 }
