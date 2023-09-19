@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { ServiceConfiguration } from 'meteor/service-configuration';
 
 import "/imports/api/Datatypes/Datatypes"
 import "/imports/api/Datatypes/methods"
@@ -30,3 +31,14 @@ Meteor.startup(async () => {
 
 
 });
+
+ServiceConfiguration.configurations.upsert(
+  { service: 'github' },
+  {
+    $set: {
+      loginStyle: 'popup',
+      clientId: Meteor.settings.github.clientId, // insert your clientId here
+      secret: Meteor.settings.github.secret, // insert your secret here
+    },
+  }
+);

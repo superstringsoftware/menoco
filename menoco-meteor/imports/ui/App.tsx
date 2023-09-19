@@ -8,6 +8,7 @@ import NavDropdown from 'react-bootstrap/esm/NavDropdown';
 import Navbar from 'react-bootstrap/esm/Navbar';
 import Row from 'react-bootstrap/esm/Row';
 import { DatatypesForm } from './DatatypesForm';
+import { LoginWithGithub } from './Login/LoginWithGithub';
 
 
 export const App = () => (
@@ -46,6 +47,7 @@ export const App = () => (
               aria-label="Search"
             />
             <Button variant="outline-success">Search</Button>
+            <LoginWithGithub />
           </Form>
         </Navbar.Collapse>
       </Container>
