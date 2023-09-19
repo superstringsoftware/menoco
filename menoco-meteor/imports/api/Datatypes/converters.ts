@@ -22,13 +22,51 @@ export const DatatypeConverters = {
         })
         s+= "}"
         return s;
+    },
+
+    /**
+     * Convert datatype to simpl-schema definition
+     * @param d 
+     */
+    simplSchema: (d: IDatatype) => {
+        let s = "/* simlp-schema definition for interface I" + d.name + " */\n"
+        s+= "export const S" + d.name + " = new SimpleSchema({\n"
+        d.fields.forEach(f => {
+            s+= "    " + simpleSchemaField(f) + ",\n"
+        })
+        s+= "\n});"
+        return s;
     }
+
 }
 
+// converting fields inside ts interface
 const tsInterfaceField = (f:IDatatypefield) => {
     let s = f.name
     if (f.optional) s+= "?"
     s+=" : " + f.type
     if (f.isArray) s+= "[]"
+    return s;
+}
+
+// converting fields inside simpl schema
+// helper map for type conversions first
+const ssTypeMap = {
+    "string": "String",
+    "boolean": "Boolean",
+    "number": "Number"
+}
+// now the function
+const simpleSchemaField = (f:IDatatypefield) => {
+    let s = f.name + ": {\n"
+    if (f.isArray) {
+
+    }
+    else {
+        s+= "        type: " + f.type + ",\n"
+        if (f.optional) s+= "        optional: true\n"
+        s+="    }"
+    }
+    
     return s;
 }

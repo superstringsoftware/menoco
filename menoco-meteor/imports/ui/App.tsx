@@ -9,8 +9,8 @@ import Navbar from 'react-bootstrap/esm/Navbar';
 import Row from 'react-bootstrap/esm/Row';
 import { DatatypesForm } from './DatatypesForm';
 import { LoginWithGithub } from './Login/LoginWithGithub';
-import {Meteor} from 'meteor/meteor'
-import {useFind, useSubscribe} from 'meteor/react-meteor-data'
+import { Meteor } from 'meteor/meteor'
+import { useFind, useSubscribe } from 'meteor/react-meteor-data'
 import { ColDatatype, IDatatype } from '../api/Datatypes/Datatypes';
 import Offcanvas from 'react-bootstrap/esm/Offcanvas';
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -40,14 +40,14 @@ export const App = () => {
   const [tsInterfaceFile, setTSInterfaceFile] = useState("")
 
   const generateFiles = (d: IDatatype) => {
-    
-    setTSInterfaceFile(DatatypeConverters.tsInterface(d))
-    
+
+    setTSInterfaceFile(DatatypeConverters.tsInterface(d) + "\n\n" + DatatypeConverters.simplSchema(d))
+
   }
 
 
   return <>
-   <Navbar expand="lg" className="bg-dark" data-bs-theme="dark">
+    <Navbar expand="lg" className="bg-dark" data-bs-theme="dark">
       <Container fluid>
         <Navbar.Brand href="#">menoco</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
@@ -82,39 +82,44 @@ export const App = () => {
             />
             <Button variant="outline-success">Search</Button>
             {Meteor.userId() ? <span>Hello, {Meteor.user()?.profile?.name}</span> : <LoginWithGithub />}
-            
+
           </Form>
         </Navbar.Collapse>
       </Container>
-    </Navbar> 
-    
+    </Navbar>
+
+    <Button variant='outline-secondary btn-sm' onClick={() => setShowLM(true)}>
+      <i className="fa-light fa-arrow-right"></i>
+    </Button>
+
     <Container fluid>
+
       <Row>
         <Col xl={12} xxl={6}>
-        <h5>Datatypes</h5>
-        {editingDT ? <DatatypesForm /> : 
-        <SyntaxHighlighter language="typescript" style={dark}>
-      {tsInterfaceFile}
-    </SyntaxHighlighter>}
-        
+          <h5>Datatypes</h5>
+          {editingDT ? <DatatypesForm /> :
+            <SyntaxHighlighter language="typescript" style={dark}>
+              {tsInterfaceFile}
+            </SyntaxHighlighter>}
+
         </Col>
       </Row>
     </Container>
 
 
     <Offcanvas show={showLM} onHide={handleCloseLeftMenu}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>My Apps</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <h5>Datatypes</h5>
-          {dts.map((d,i) => <>
-          <a href="#" onClick={()=> {
+      <Offcanvas.Header closeButton>
+        <Offcanvas.Title>My Apps</Offcanvas.Title>
+      </Offcanvas.Header>
+      <Offcanvas.Body>
+        <h5>Datatypes</h5>
+        {dts.map((d, i) => <>
+          <a href="#" onClick={() => {
             setCurrentDT(d)
             generateFiles(d)
-            }}>{d.name}</a>
-          </>)}
-        </Offcanvas.Body>
-      </Offcanvas>
+          }}>{d.name}</a>
+        </>)}
+      </Offcanvas.Body>
+    </Offcanvas>
   </>
 }
