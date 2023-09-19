@@ -55,7 +55,9 @@ export const DatatypesController = {
   // update existing
   update: new ValidatedMethod({
     name: "datatypes.update",
-    validate: SDatatype.validator(),
+    validate: (props: any) => {
+        SDatatype.validate(props.fields)
+    },
     run(props: { id: string; fields: Partial<IDatatype> }) {
       const uid = Meteor.userId();
       if (!uid) {

@@ -7,6 +7,16 @@ import { IDatatype, IDatatypefield } from "./Datatypes";
 export const DatatypeConverters = {
 
     /**
+     * Generate full data file with all given options from the datatype
+     * @param d 
+     */
+    genDataFile: (d:IDatatype) => {
+        let s = "import { Mongo } from 'meteor/mongo'\nimport SimpleSchema from 'simpl-schema';\n\n"
+        s+= DatatypeConverters.tsInterface(d) + "\n\n" + DatatypeConverters.simplSchema(d)
+        return s
+    },
+
+    /**
      * Convert datatype to typescript interface
      * @param d 
      * @returns 

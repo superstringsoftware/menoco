@@ -41,7 +41,7 @@ export const App = () => {
 
   const generateFiles = (d: IDatatype) => {
 
-    setTSInterfaceFile(DatatypeConverters.tsInterface(d) + "\n\n" + DatatypeConverters.simplSchema(d))
+    setTSInterfaceFile(DatatypeConverters.genDataFile(d))
 
   }
 
