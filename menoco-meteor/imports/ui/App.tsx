@@ -9,6 +9,7 @@ import Navbar from 'react-bootstrap/esm/Navbar';
 import Row from 'react-bootstrap/esm/Row';
 import { DatatypesForm } from './DatatypesForm';
 import { LoginWithGithub } from './Login/LoginWithGithub';
+import {Meteor} from 'meteor/meteor'
 
 
 export const App = () => (
@@ -47,7 +48,8 @@ export const App = () => (
               aria-label="Search"
             />
             <Button variant="outline-success">Search</Button>
-            <LoginWithGithub />
+            {Meteor.userId() ? <span>Hello, {Meteor.user()?.profile?.name}</span> : <LoginWithGithub />}
+            
           </Form>
         </Navbar.Collapse>
       </Container>
