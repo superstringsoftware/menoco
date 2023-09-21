@@ -1,1 +1,1 @@
-meteor --settings settings/deploy-dev.json
+meteor --settings settings/deploy-dev.json --port 4000
