@@ -87,3 +87,91 @@ const simpleSchemaField = (f:IDatatypefield) => {
     
     return s;
 }
+
+/**
+ * Converters into ReactForms
+ */
+export const FormConverters = {
+
+    basicReactForm: (d:IDatatype) => { 
+
+        const formGroupStyles = "mb-3"
+        const formName = d.name + "FormBasic"
+        const dvName = "data" + d.name
+        const datatypeName = "I" + d.name
+        const datatypeSimplSchemaName = "S" + d.name
+
+        // now field by field generations
+        let fieldStateDefinitions = ""
+        let fieldsNdtConstruction = ""
+        let allFormGroupsForFields = ""
+        d.fields.forEach (f => {
+            fieldStateDefinitions+= `    const [${f.name}, set${f.name}] = useState(odt ? odt.${f.name} : '')\n`
+            fieldsNdtConstruction+= `         ${f.name}: ${f.name},\n`
+            // todo - need different input types!!!
+            allFormGroupsForFields+= `            <Form.Group className="${formGroupStyles}">
+            <Form.Label>Edit ${f.name}</Form.Label>
+            <Form.Control type="text" placeholder="enter ${f.name}"
+                value={${f.name}} onChange={(e) => set${f.name}(e.target.value)} />
+            {!valid && vctx?.keyErrorMessage("${f.name}") && <span className='text-danger'>{vctx?.keyErrorMessage("${f.name}")}</span>}
+        </Form.Group>\n`
+        })
+
+
+        const s = `import React, { useState } from 'react'
+import Form from 'react-bootstrap/esm/Form'
+import Button from 'react-bootstrap/esm/Button'
+import ${datatypeName} from '[PUT PROPER FILE NAME]'
+import ${datatypeSimplSchemaName} from '[PUT PROPER FILE NAME]'
+
+export const ${formName} = (props:{ ${dvName}: ${datatypeName},
+    onCancel: () => void,
+    onSave: (${dvName}: ${datatypeName}) => void
+}) => {
+
+    const odt = props.${dvName}
+    const onCancel = props.onCancel
+    const onSave = props.onSave
+
+    const [valid, setValid] = useState(true)
+    const [vctx, setVctx] = useState<any>(null)
+
+    /* here go the field state definitions */
+${fieldStateDefinitions}
+    /* end of the field state definitions  */
+
+    const save = () => {
+
+        /* construction of the ndt */
+        const ndt: ${datatypeName} = {
+            // ... fields go here
+${fieldsNdtConstruction}
+        }
+        /* end of construction of the ndt */
+
+        const validationContext = ${datatypeSimplSchemaName}.newContext();
+        validationContext.validate(ndt);
+
+        setValid(validationContext.isValid());
+        setVctx(validationContext)
+
+        if (validationContext.isValid()) {
+            onSave(ndt)
+        }
+    }
+
+    return (
+        <Form>
+            
+${allFormGroupsForFields}
+            
+            <Button variant="outline-success" onClick={save}>Save</Button>{" "}
+            <Button variant="outline-warning" onClick={onCancel}>Cancel</Button>
+        </Form>
+    )
+}
+`
+        return s;
+    }
+}
+

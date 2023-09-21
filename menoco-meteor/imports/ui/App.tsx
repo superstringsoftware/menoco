@@ -15,7 +15,8 @@ import { ColDatatype, IDatatype } from '../api/Datatypes/Datatypes';
 import Offcanvas from 'react-bootstrap/esm/Offcanvas';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco, dark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { DatatypeConverters } from '../api/Datatypes/converters';
+import { DatatypeConverters, FormConverters } from '../api/Datatypes/converters';
+import { TestReactForm } from './TestReactForm';
 
 
 export const App = () => {
@@ -38,10 +39,12 @@ export const App = () => {
 
   // text strings with generated files
   const [tsInterfaceFile, setTSInterfaceFile] = useState("")
+  const [tsFormFile, setTSFormFile] = useState("")
 
   const generateFiles = (d: IDatatype) => {
 
     setTSInterfaceFile(DatatypeConverters.genDataFile(d))
+    setTSFormFile(FormConverters.basicReactForm(d))
 
   }
 
@@ -103,6 +106,16 @@ export const App = () => {
             </SyntaxHighlighter>}
 
         </Col>
+        <Col xl={12} xxl={6}>
+          {!editingDT && <SyntaxHighlighter language="typescript" style={dark}>
+              {tsFormFile}
+            </SyntaxHighlighter>}
+
+        </Col>
+      </Row>
+
+      <Row>
+        {/*<TestReactForm onCancel={()=>{}} onSave={(dt)=>{}}/>*/}
       </Row>
     </Container>
 
